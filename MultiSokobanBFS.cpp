@@ -28,7 +28,7 @@ private:
         }
     }
 
-    // CRITICAL: Solves the "Identity Problem" for multiple boxes
+    // Solves the Identity Problem for multiple boxes
     string serializeState(const vector<string>& g) const {
         string s = "";
         int px = -1, py = -1;
@@ -131,7 +131,6 @@ public:
             if (nny >= 0 && nny < currentGrid.size() && nnx >= 0 && nnx < width) {
                 char cellBeyond = currentGrid[nny][nnx];
                 
-                // CRITICAL: "No Double Push" rule. 
                 // We only push if the space beyond is strictly empty floor or a goal.
                 if (cellBeyond == ' ' || cellBeyond == '.') {
                     currentGrid[nny][nnx] = (cellBeyond == ' ') ? '$' : '*';
@@ -165,7 +164,7 @@ public:
                 return current.path;
             }
 
-            // Safety limit so your computer doesn't freeze
+            // Safety limit
             if (nodesExplored > 100000) return "NO SOLUTION (Timeout)";
 
             for (char move : moves) {
@@ -208,13 +207,6 @@ public:
 int main() {
     SokobanMultiBFS game;
     
-    // A simple 2-Box, 2-Goal Level to test the physics
-    // ########
-    // #      #
-    // # .  . #
-    // #  $$  #
-    // #  @   #
-    // ########
     string multiBoxLevel = "8:#########      ## .  . ##  $$  ##  @   #########";
 
     if (!game.loadLevel(multiBoxLevel)) {
