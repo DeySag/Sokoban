@@ -11,7 +11,6 @@ struct GameState {
     int hCost;  // Heuristic cost to goal
     
     int fCost() const {
-        // L5 Solver Optimization: Static Bound Relax
         // We multiply the heuristic by 2.5 to make the search much faster
         return gCost + (hCost * 2.5); 
     }
@@ -34,7 +33,7 @@ private:
     int initialPlayerX, initialPlayerY;
     int width;
     vector<pair<int, int>> goalPositions;
-    vector<vector<bool>> deadSquares; // NEW: Pre-calculated dead squares
+    vector<vector<bool>> deadSquares; // Pre-calculated dead squares
 
     void findPlayer() {
         for (int i = 0; i < grid.size(); ++i) {
@@ -59,7 +58,7 @@ private:
         }
     }
 
-    // L2 Solver Optimization: Minified Board State for Transposition Table
+    // Minified Board State for Transposition Table
     string serializeState(const vector<string>& g) const {
         string s = "";
         int px = -1, py = -1;
@@ -88,7 +87,7 @@ private:
         return s;
     }
 
-    // L3 Solver Optimization: Pre-calculate all simple deadlocks using a pull-search
+    // Pre-calculate all simple deadlocks using a pull-search
     void precalculateDeadlocks() {
         // Assume everywhere is a dead square initially
         deadSquares.assign(grid.size(), vector<bool>(width, true));
@@ -133,7 +132,7 @@ private:
         }
     }
 
-    // L1 Solver Optimization: Extended Move Generator (Macro Moves)
+    // Extended Move Generator (Macro Moves)
     vector<GameState> generateMacroMoves(const GameState& current) const {
         vector<GameState> nextStates;
         
@@ -182,7 +181,6 @@ private:
                         if (beyond == ' ' || beyond == '.') {
                             GameState nextState = current;
                             
-                            // -- Apply the Macro Move to the Grid --
                             // Erase player from the original starting position
                             nextState.grid[current.py][current.px] = (nextState.grid[current.py][current.px] == '+') ? '.' : ' ';
                             
@@ -301,7 +299,7 @@ public:
         findGoals();
         initialGrid = grid;
         
-        precalculateDeadlocks(); // NEW: Build the deadlock table before searching
+        precalculateDeadlocks(); // Build the deadlock table before searching
 
         return true;
     }
@@ -404,16 +402,15 @@ public:
             
             for (GameState& nextState : macroMoves) {
                 
-                // 1. Instant Deadlock check (from Phase 2)
+                // 1. Instant Deadlock check
                 if (isDeadlock(nextState.grid)) {
                     continue;
                 }
 
-                // 2. Transposition Table check (from Phase 1)
+                // 2. Transposition Table check
                 string nextSerialized = serializeState(nextState.grid);
                 
                 if (closedSet.find(nextSerialized) == closedSet.end()) {
-                    // We don't need to append the path or gCost here, generateMacroMoves already did it!
                     nextState.hCost = calculateHeuristic(nextState.grid);
                     openSet.push(nextState);
                 }
