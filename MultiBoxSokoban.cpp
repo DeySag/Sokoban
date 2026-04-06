@@ -165,10 +165,9 @@ int main() {
         cout << "\n";
         printGrid(matrix);
 
-        // Python code checks if game is won immediately after printing the grid
         if (count_tar == 0) {
             cout << "Game Won !!\n";
-            printGrid(matrix); // Python prints the grid one last time here
+            printGrid(matrix); 
             break;
         }
     }
