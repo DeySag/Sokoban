@@ -11,7 +11,6 @@ struct GameState {
     int hCost;  // Heuristic cost to goal
     
     int fCost() const {
-        // L5 Solver Optimization: Static Bound Relax
         // We multiply the heuristic by 2.5 to make the search much faster
         return gCost + (hCost * 2.5); 
     }
@@ -34,7 +33,7 @@ private:
     int initialPlayerX, initialPlayerY;
     int width;
     vector<pair<int, int>> goalPositions;
-    vector<vector<bool>> deadSquares; // NEW: Pre-calculated dead squares
+    vector<vector<bool>> deadSquares; // Pre-calculated dead squares
 
     void findPlayer() {
         for (int i = 0; i < grid.size(); ++i) {
@@ -59,7 +58,7 @@ private:
         }
     }
 
-    // L2 Solver Optimization: Minified Board State for Transposition Table
+    // Minified Board State for Transposition Table
     string serializeState(const vector<string>& g) const {
         string s = "";
         int px = -1, py = -1;
@@ -76,8 +75,7 @@ private:
             }
         }
         
-        // Sort boxes so identical box configurations yield the exact same string
-        // regardless of the order we found them in
+        // Sort boxes so identical box configurations yield the exact same string regardless of the order we found them in
         sort(boxes.begin(), boxes.end());
         
         // Build a tiny string: "px,py|boxX,boxY;boxX,boxY;"
@@ -88,7 +86,7 @@ private:
         return s;
     }
 
-    // L3 Solver Optimization: Pre-calculate all simple deadlocks using a pull-search
+    // Pre-calculate all simple deadlocks using a pull-search
     void precalculateDeadlocks() {
         // Assume everywhere is a dead square initially
         deadSquares.assign(grid.size(), vector<bool>(width, true));
@@ -110,7 +108,7 @@ private:
             q.pop();
             
             for (int i = 0; i < 4; ++i) {
-                int nx = cx + dx[i]; // Box's previous position (if pulled)
+                int nx = cx + dx[i]; // Box's previous position if pulled
                 int ny = cy + dy[i];
                 
                 int px = cx + 2 * dx[i]; // Player's position needed to push the box
@@ -227,7 +225,7 @@ public:
         findGoals();
         initialGrid = grid;
         
-        precalculateDeadlocks(); // NEW: Build the deadlock table before searching
+        precalculateDeadlocks(); // Build the deadlock table before searching
 
         return true;
     }
