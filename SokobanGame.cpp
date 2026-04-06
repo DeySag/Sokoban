@@ -132,7 +132,6 @@ public:
 int main() {
     Sokoban game;
     
-    // The correctly aligned Example 2 level
     string levelString = "12:      ####   #######  #  #        #  #       .# #@  ####  # #         # # # # #   # #       $ # # ####    #  ####       "; 
     
     if (!game.loadLevel(levelString)) {
