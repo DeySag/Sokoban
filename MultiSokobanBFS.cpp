@@ -102,7 +102,7 @@ public:
         for (const string& row : grid) cout << row << "\n";
         cout << "\n";
     }
-
+// Simulates the box movements in all the given directions
     bool simulateMove(vector<string>& currentGrid, int& px, int& py, char dir) const {
         int dx = 0, dy = 0;
         if (dir == 'U') dy = -1;
